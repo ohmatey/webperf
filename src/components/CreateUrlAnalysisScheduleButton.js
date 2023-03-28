@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useSession, signIn } from 'next-auth/react'
 import { useRouter } from 'next/router'
 import { useMutation } from 'react-query'
 import Button from '@mui/material/Button'
@@ -39,6 +40,10 @@ const cronSchedules = [
 const CreateUrlAnalysisScheduleButton = ({
   url
 }) => {
+  const {
+    data: session,
+    status: loading
+  } = useSession()
   const router = useRouter()
   const [cron, setCron] = useState(cronSchedules[3].value)
   const [isCreatingSchedule, setIsCreatingSchedule] = useState(false)
@@ -70,13 +75,17 @@ const CreateUrlAnalysisScheduleButton = ({
   const handleSubmit = async e => {
     e.preventDefault()
 
+    if (!session) {
+      return signIn()
+    }
+
     const scheduledAnalysis = await createUrlAnalysisSchedule({
       url,
       cron
     })
 
     toggleIsCreatingSchedule()
-    router.push(`/scheduledAnalysis/${scheduledAnalysis.id}`)
+    router.push(`/dashboard/scheduledAnalysis/${scheduledAnalysis.id}`)
   }
 
   return (
@@ -85,7 +94,7 @@ const CreateUrlAnalysisScheduleButton = ({
         variant='contained'
         color='primary'
         onClick={toggleIsCreatingSchedule}
-        disabled={isCreatingUrlAnalysisSchedule}
+        disable={isCreatingUrlAnalysisSchedule || loading}
       >
         Schedule analysis
       </Button>

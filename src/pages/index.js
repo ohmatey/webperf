@@ -3,16 +3,13 @@ import { useMutation } from 'react-query'
 import Container from '@mui/material/Container'
 import Typography from '@mui/material/Typography'
 import TextField from '@mui/material/TextField'
+import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Stack from '@mui/material/Stack'
-import { Paper } from '@mui/material'
+import { Grid, Paper } from '@mui/material'
 
 import ResultsCard from '../components/ResultsCard'
-
-const suggestedUrls = [
-  // 'https://paifit.com/',
-  // 'https://phukettopteam.com/'
-]
+import AuthButton from '../components/AuthButton'
 
 export default function Home() {
   const [url, setUrl] = useState('https://paifit.com/')
@@ -60,93 +57,96 @@ export default function Home() {
       console.error('Error submitting url', error)
     }
   }
-
   return (
-    <>
-      <main>
-        <Container maxWidth='md'>
-          <Typography
-            variant='h1'
-            component='h1'
-          >Webperf</Typography>
-
-          <Typography
-            variant='body1'
-            gutterBottom
-          >
-            Simple web analysis tool
-          </Typography>
-
-          <Paper
+    <main>
+      <Container maxWidth='md'>
+        <Grid
+          container
+          justifyContent='space-between'  
+        >
+          <Grid
+            item
+            xs={12}
+            sm={6}
             sx={{
-              padding: 2,
-              my: 3
+              pl: 3
             }}
           >
-            {/* form to submit a url and recieve analysis results */}
-            <form onSubmit={handleSubmit}
-              style={{
-                marginBottom: 8
+            <Typography
+              variant='h1'
+              component='h1'
+            >Webperf</Typography>
+
+            <Typography
+              variant='body1'
+              gutterBottom
+            >
+              Simple web analysis tool
+            </Typography>
+          </Grid>
+
+          <Grid
+            item
+            xs={12}
+            sm={6}
+          >
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'flex-end',
+                padding: 3
               }}
             >
-              <Stack spacing={1}>
-                <Typography
-                  variant='h3'
-                  component='h2'
-                >Enter url to analyse</Typography>
+              <AuthButton />
+            </Box>
+          </Grid>
+        </Grid>
 
-                <TextField
-                  type='text'
-                  id='url'
-                  name='url'
-                  value={url}
-                  label='URL'
-                  onChange={(e) => setUrl(e.target.value)}
-                />
-                
-                <Button
-                  type='submit'
-                  disabled={isAnalyzing}
-                  size='large'
-                  style={{
-                    background: '#eee',
-                    border: '1px solid #ccc'
-                  }}
-                >Submit</Button>
-              </Stack>
-            </form>
-          </Paper>
+        <Paper
+          sx={{
+            padding: 2,
+            my: 5
+          }}
+        >
+          {/* form to submit a url and recieve analysis results */}
+          <form onSubmit={handleSubmit}>
+            <Stack spacing={1}>
+              <Typography
+                variant='h3'
+                component='h2'
+                gutterBottom
+              >Enter url to analyse</Typography>
 
-          <div
-            sx={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center'
-            }}
-          >
-            <div>
-              {suggestedUrls.map((suggestedUrl, index) => (
-                <button
-                  key={index}
-                  onClick={() => setUrl(suggestedUrl)}
-                  style={{
-                    marginRight: 8
-                  }}
-                >
-                  {suggestedUrl}
-                </button>
-              ))}
-            </div>
-          </div>
-        </Container>
+              <TextField
+                type='text'
+                id='url'
+                name='url'
+                value={url}
+                label='URL'
+                onChange={(e) => setUrl(e.target.value)}
+              />
+              
+              <Button
+                type='submit'
+                disable={isAnalyzing}
+                size='large'
+                sx={{
+                  background: '#eee',
+                  border: '1px solid #ccc'
+                }}
+              >Submit</Button>
+            </Stack>
+          </form>
+        </Paper>
+      </Container>
 
-        <ResultsCard
-          analysisData={analysisData}
-          isAnalyzing={isAnalyzing}
-          isAnalysisError={isAnalysisError}
-          analysisError={analysisError}
-        />
-      </main>
-    </>
+      <ResultsCard
+        analysisData={analysisData}
+        isAnalyzing={isAnalyzing}
+        isAnalysisError={isAnalysisError}
+        analysisError={analysisError}
+      />
+    </main>
   )
 }
+

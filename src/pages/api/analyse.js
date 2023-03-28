@@ -1,3 +1,4 @@
+// import restrictedRoute from '../../middleware/restrictedRoute'
 import applyRateLimit from '../../middleware/rateLimiter'
 import fetchAccessibilityData from '../../lib/fetchAccessibilityData'
 import fetchMetadata from '../../lib/fetchMetadata'
@@ -32,7 +33,13 @@ export default async function handler(req, res) {
     await applyRateLimit(req, res)
   } catch {
     return response.status(429).send('Too many requests')
-  }  
+  }
+
+  // try {
+  //   await restrictedRoute(req, res)
+  // } catch (error) {
+  //   return res.status(401).json({ error: 'Not authenticated' })
+  // }
 
   if (req.method === 'POST') {
     const {

@@ -2,7 +2,8 @@ import React from 'react'
 import Link from 'next/link'
 import { Container, Paper, Typography, Table, TableHead, TableRow, TableCell, TableBody, Button } from '@material-ui/core'
 
-import scheduledAnalyses from '../modules/scheduledAnalyses'
+import scheduledAnalyses from '../../modules/scheduledAnalyses'
+import restrictedRoute from '../../middleware/restrictedRoute'
 
 const ScheduledAnalyses = ({
   allScheduledAnalyses
@@ -65,6 +66,18 @@ const ScheduledAnalyses = ({
 }
 
 export async function getServerSideProps() {
+  try {
+    await restrictedRoute(req, res)
+  } catch (error) {
+    console.error(error)
+
+    return {
+      props: {
+        allScheduledAnalyses: []
+      }
+    }
+  }
+
   try {
     const allScheduledAnalyses = await scheduledAnalyses.getAll()
 

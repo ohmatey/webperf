@@ -2,7 +2,8 @@ import React from 'react'
 import { Container, Typography, Box } from '@material-ui/core'
 import Stack from '@mui/material/Stack'
 
-import scheduledAnalyses from '../../modules/scheduledAnalyses'
+import restrictedRoute from '../../../middleware/restrictedRoute'
+import scheduledAnalyses from '../../../modules/scheduledAnalyses'
 
 const ScheduleAnalysisPage = ({
   scheduledAnalysis = {}
@@ -50,16 +51,42 @@ const ScheduleAnalysisPage = ({
   )
 }
 
-export async function getServerSideProps(context) {
-  const { scheduledAnalysisId } = context.params
+export async function getServerSideProps({
+  req,
+  res,
+  params: {
+    scheduledAnalysisId
+  }
+}) {
+  try {
+    await restrictedRoute(req, res)
+  } catch (error) {
+    return {
+      redirect: {
+        destination: '/api/auth/signin',
+        permanent: false,
+      },
+    }
+  }
 
-  // get scheduledAnalysis from database
-  const scheduledAnalysis = await scheduledAnalyses.getById(scheduledAnalysisId)
+  try {
+    // get scheduledAnalysis from database
+    const scheduledAnalysis = await scheduledAnalyses.getById(scheduledAnalysisId)
 
-  return {
-    props: {
-      scheduledAnalysis,
-    },
+    return {
+      props: {
+        scheduledAnalysis,
+      },
+    }
+  } catch (error) {
+    console.error('Error getting scheduledAnalysis', error)
+
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false,
+      },
+    }
   }
 }
 
