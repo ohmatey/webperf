@@ -7,6 +7,7 @@ import { db } from '../../../services/firebaseAdmin'
 
 export const authOptions = {
   adapter: FirestoreAdapter(db),
+  secret: process.env.SECRET,
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID,
