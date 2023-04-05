@@ -17,7 +17,7 @@ export const authOptions = {
   callbacks: {
     async redirect({ url, baseUrl }) {
       // Allows relative callback URLs
-      if (url.startsWith("/")) {
+      if (url.startsWith('/')) {
         return `${baseUrl}${url}`
       }
 

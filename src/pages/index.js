@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useForm, Controller } from 'react-hook-form'
 import { useMutation } from 'react-query'
 import Container from '@mui/material/Container'
 import Typography from '@mui/material/Typography'
@@ -6,13 +6,28 @@ import TextField from '@mui/material/TextField'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Stack from '@mui/material/Stack'
-import { Grid, Paper } from '@mui/material'
+import Grid from '@mui/material/Grid'
+import Paper from '@mui/material/Paper'
+import FormControl from '@mui/material/FormControl'
+import FormLabel from '@mui/material/FormLabel'
+import RadioGroup from '@mui/material/RadioGroup'
+import FormControlLabel from '@mui/material/FormControlLabel'
+import Radio from '@mui/material/Radio'
 
 import ResultsCard from '../components/ResultsCard'
 import AuthButton from '../components/AuthButton'
 
 export default function Home() {
-  const [url, setUrl] = useState('https://paifit.com/')
+  const {
+    register,
+    handleSubmit,
+    control,
+    formState: { errors }
+  } = useForm({
+    defaultValues: {
+      formFactor: 'mobile'
+    }
+  })
 
   const {
     mutateAsync: analyzeUrl,
@@ -22,7 +37,8 @@ export default function Home() {
     data: analysisData
   } = useMutation({
     mutationFn: async ({
-      url
+      url,
+      formFactor = 'mobile'
     }) => {
       const analysisRes = await fetch('/api/analyse', {
         method: 'POST',
@@ -30,7 +46,8 @@ export default function Home() {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          url
+          url,
+          formFactor
         })
       })
 
@@ -44,19 +61,8 @@ export default function Home() {
     }
   })
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
+  const formFactorField = register('formFactor')
 
-    const url = e.target.url.value
-
-    try {
-      return analyzeUrl({
-        url
-      })
-    } catch (error) {
-      console.error('Error submitting url', error)
-    }
-  }
   return (
     <main>
       <Container maxWidth='md'>
@@ -109,7 +115,7 @@ export default function Home() {
           }}
         >
           {/* form to submit a url and recieve analysis results */}
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit(analyzeUrl)}>
             <Stack spacing={1}>
               <Typography
                 variant='h3'
@@ -121,14 +127,45 @@ export default function Home() {
                 type='text'
                 id='url'
                 name='url'
-                value={url}
                 label='URL'
-                onChange={(e) => setUrl(e.target.value)}
+                {...register('url', {
+                  required: 'URL is required'
+                })}
+                error={!!errors.url}
+                helperText={errors.url?.message}
               />
-              
+
+              {/* mobile or desktop formFactor, default mobile */}
+              {/* select buttons */}
+              <FormControl component='fieldset'>
+                <FormLabel component='legend'>Form Factor</FormLabel>
+                
+                <Controller
+                  name='formFactor'
+                  control={control}
+                  render={({ field }) => (
+                    <RadioGroup
+                      row
+                      aria-label='formFactor'
+                      name='formFactor'
+                      {...field}
+                    >
+                      {['mobile', 'desktop'].map((formFactor) => (
+                        <FormControlLabel
+                          key={formFactor}
+                          value={formFactor}
+                          control={<Radio />}
+                          label={formFactor}
+                        />
+                      ))}
+                    </RadioGroup>
+                  )}
+                />
+              </FormControl>
+
               <Button
                 type='submit'
-                disable={isAnalyzing}
+                disabled={isAnalyzing}
                 size='large'
                 sx={{
                   background: '#eee',

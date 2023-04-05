@@ -42,31 +42,45 @@ const usefulMetrics = [
 ]
 
 async function fetchCoreWebVitals(url, lighthouseOptions) {
-  const browser = await puppeteer.launch({ headless: true })
-  const { lhr } = await lighthouse(url, {
-    port: new URL(browser.wsEndpoint()).port,
-    output: 'json',
-    logLevel: 'info',
-    ...lighthouseOptions
-  })
+  let browser
 
-  await browser.close()
+  try {
+    browser = await puppeteer.launch({ headless: true })
+    
+    // run lighthouse
+    const { lhr } = await lighthouse(url, {
+      port: new URL(browser.wsEndpoint()).port,
+      output: 'json',
+      logLevel: 'info',
+      ...lighthouseOptions
+    })
 
-  const audit = lhr.audits
+    await browser.close()
 
-  const coreWebVitalMetrics = usefulMetrics.map(metric => {
+    const audit = lhr.audits
+
+    const coreWebVitalMetrics = usefulMetrics.map(metric => {
+      return {
+        ...audit[metric.id],
+        metric
+      }
+    }).filter(metric => metric !== undefined)
+
     return {
-      ...audit[metric.id],
-      metric
+      coreWebVitalMetrics,
+      categories: lhr.categories,
+      entities: lhr.entities,
+      environment: lhr.environment,
+      finalDisplayedUrl: lhr.finalDisplayedUrl
     }
-  }).filter(metric => metric !== undefined)
+  } catch (error) {
+    console.error(error)
 
-  return {
-    coreWebVitalMetrics,
-    categories: lhr.categories,
-    entities: lhr.entities,
-    environment: lhr.environment,
-    finalDisplayedUrl: lhr.finalDisplayedUrl
+    if (browser) {
+      await browser.close()
+    }
+
+    return null
   }
 }
 

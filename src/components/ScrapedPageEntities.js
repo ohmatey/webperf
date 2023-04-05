@@ -24,6 +24,7 @@ const ScrapedPageEntities = ({
             <Paper
               sx={{
                 padding: 1,
+                lineBreak: 'anywhere'
               }}
             >
               <Typography variant='h5'>{entity.name}</Typography>

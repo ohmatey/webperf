@@ -37,5 +37,8 @@
   },
   "remoteconfig": {
     "template": "remoteconfig.template.json"
+  },
+  "extensions": {
+    "firestore-bigquery-export": "firebase/firestore-bigquery-export@0.1.31"
   }
 }

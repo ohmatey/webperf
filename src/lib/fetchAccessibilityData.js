@@ -2,15 +2,27 @@ import { AxePuppeteer } from 'axe-puppeteer'
 import puppeteer from 'puppeteer'
 
 async function fetchAccessibilityData(url) {
-  const browser = await puppeteer.launch({ headless: true })
-  const page = await browser.newPage()
-  await page.goto(url)
+  let browser
 
-  const results = await new AxePuppeteer(page).analyze()
+  try {
+    browser = await puppeteer.launch({ headless: true })
+    
+    const page = await browser.newPage()
+    
+    await page.goto(url)
 
-  await browser.close()
+    const results = await new AxePuppeteer(page).analyze()
 
-  return results
+    await browser.close()
+
+    return results
+  } catch (error) {
+    if (browser) {
+      await browser.close()
+    }
+
+    throw error
+  }
 }
 
 export default fetchAccessibilityData

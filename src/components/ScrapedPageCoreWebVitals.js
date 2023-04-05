@@ -42,7 +42,7 @@ const CwvMetricCard = ({
         variant='h4'
         component='h4'
         gutterBottom
-      >{title}: {score * 100}</Typography>
+      >{title}: {Math.round(score * 100)}</Typography>
       
       <Typography
         variant='body1'
