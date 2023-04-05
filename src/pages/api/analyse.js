@@ -89,9 +89,9 @@ export default async function handler(req, res) {
         metadata,
         webreport: coreWebVitalMetrics,
         accessibilityReport: {
-          testEngine: axeAccessibilityReport.testEngine,
-          testEnvironment: axeAccessibilityReport.testEnvironment,
-          violations: axeAccessibilityReport.violations,
+          testEngine: axeAccessibilityReport?.testEngine,
+          testEnvironment: axeAccessibilityReport?.testEnvironment,
+          violations: axeAccessibilityReport?.violations,
         }
       }
 
