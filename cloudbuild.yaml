@@ -2,7 +2,6 @@ steps:
   - name: 'gcr.io/cloud-builders/docker'
     args:
       - 'build'
-      - '.'
       - '-t'
       - '$_PROJECT_REGION-docker.pkg.dev/$PROJECT_ID/webperfly/web-app:$COMMIT_SHA'
       - '--build-arg=NEXTAUTH_URL=$_NEXTAUTH_URL'
@@ -19,6 +18,7 @@ steps:
       - '--build-arg=GOOGLE_CLIENT_ID=$_GOOGLE_CLIENT_ID'
       - '--build-arg=GOOGLE_CLIENT_SECRET=$_GOOGLE_CLIENT_SECRET'
       - '--build-arg=SECRET=$_SECRET'
+      - '.'
 
   
   - name: 'gcr.io/cloud-builders/docker'
@@ -29,13 +29,13 @@ steps:
   # Deploy to cloud run
   - name: 'gcr.io/cloud-builders/gcloud'
     args:
-      - 'beta'
+      - 'run'
       - 'deploy'
+      - 'webperfly'
       - '--image=$_PROJECT_REGION-docker.pkg.dev/$PROJECT_ID/webperfly/web-app:$COMMIT_SHA'
       - '--platform=managed'
       - '--region=us-central1'
       - '--allow-unauthenticated'
-      - 'webperfly'
 
 # replacements variables
 substitutions:
