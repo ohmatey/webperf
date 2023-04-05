@@ -7,6 +7,7 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab'
 import Box from '@mui/material/Box'
 
+import analytics from '../services/analytics'
 import ScrapedPageEntities from './ScrapedPageEntities'
 import ScrapedPageCoreWebVitals from './ScrapedPageCoreWebVitals'
 import LighthouseCategoryResults from './LighthouseCategoryResults'
@@ -58,6 +59,9 @@ const ResultsCard = ({
   const [selectedPanelIndex, setselectedPanelIndex] = useState(0)
 
   const handleSelectPanel = (event, newPanelName) => {
+    analytics.track('selectTab', {
+      tabName: newPanelName
+    })
     setselectedPanelIndex(newPanelName)
   }
 

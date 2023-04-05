@@ -14,8 +14,27 @@ import RadioGroup from '@mui/material/RadioGroup'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import Radio from '@mui/material/Radio'
 
+import analytics from '../services/analytics'
 import ResultsCard from '../components/ResultsCard'
 import AuthButton from '../components/AuthButton'
+
+const track = (event, {
+  url,
+  formFactor,
+  statusCode,
+  statusText,
+  error,
+  timeToComplete
+}) => {
+  return analytics.track(event, {
+    url,
+    formFactor,
+    statusCode,
+    statusText,
+    error,
+    timeToComplete
+  })
+}
 
 export default function Home() {
   const {
@@ -40,28 +59,55 @@ export default function Home() {
       url,
       formFactor = 'mobile'
     }) => {
-      const analysisRes = await fetch('/api/analyse', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          url,
-          formFactor
+      const startTime = Date.now()
+
+      try {
+        const analysisRes = await fetch('/api/analyse', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            url,
+            formFactor
+          })
         })
-      })
 
-      if (!analysisRes.ok) {
-        return Promise.reject('Brokeded')
+        if (!analysisRes.ok) {
+          track('analysis-error', {
+            url,
+            formFactor,
+            statusCode: analysisRes.status,
+            statusText: analysisRes.statusText,
+            timeToComplete: Date.now() - startTime
+          })
+          
+          return Promise.reject('Brokeded')
+        }
+        
+        track('analysis-success', {
+          url,
+          formFactor,
+          statusCode: analysisRes.status,
+          statusText: analysisRes.statusText,
+          timeToComplete: Date.now() - startTime
+        })
+
+        const analysis = analysisRes.json()
+
+        return analysis
+      } catch (err) {
+        track('analysis-error', {
+          url,
+          formFactor,
+          error: err.message,
+          timeToComplete: Date.now() - startTime
+        })
+
+        return Promise.reject(err)
       }
-      
-      const analysis = analysisRes.json()
-
-      return analysis
     }
   })
-
-  const formFactorField = register('formFactor')
 
   return (
     <main>

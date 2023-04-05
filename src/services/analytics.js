@@ -2,7 +2,6 @@ import Analytics from 'analytics'
 import googleAnalytics from '@analytics/google-analytics'
 
 const googleAnalyticsId = process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID
-console.log('googleAnalyticsId', googleAnalyticsId)
 
 const plugins = []
 
