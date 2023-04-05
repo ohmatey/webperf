@@ -2,6 +2,7 @@ steps:
   - name: 'gcr.io/cloud-builders/docker'
     args:
       - 'build'
+      - '.'
       - '-t'
       - '$_PROJECT_REGION-docker.pkg.dev/$PROJECT_ID/webperfly:$COMMIT_SHA'
       - '--build-arg=NEXTAUTH_URL=$_NEXTAUTH_URL'
