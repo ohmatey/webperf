@@ -1,6 +1,6 @@
 import React from 'react'
 import Link from 'next/link'
-import { Container, Paper, Typography, Table, TableHead, TableRow, TableCell, TableBody, Button } from '@material-ui/core'
+import { Container, Paper, Typography, Table, TableHead, TableRow, TableCell, TableBody, Button } from '@mui/material'
 
 import scheduledAnalyses from '../../modules/scheduledAnalyses'
 import restrictedRoute from '../../middleware/restrictedRoute'
