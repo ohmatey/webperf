@@ -2,8 +2,8 @@ import React from 'react'
 import { Container, Typography, Box } from '@mui/material'
 import Stack from '@mui/material/Stack'
 
-import restrictedRoute from '../../../middleware/restrictedRoute'
-import scheduledAnalyses from '../../../modules/scheduledAnalyses'
+import restrictedRoute from '../../src/middleware/restrictedRoute'
+import scheduledAnalyses from '../../src/modules/scheduledAnalyses'
 
 const ScheduleAnalysisPage = ({
   scheduledAnalysis = {}

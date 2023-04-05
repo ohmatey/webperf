@@ -30,6 +30,7 @@
     "express-slow-down": "^1.6.0",
     "firebase": "^9.18.0",
     "firebase-admin": "^11.5.0",
+    "firebase-tools": "^11.25.2",
     "lighthouse": "^10.1.0",
     "next": "13.2.4",
     "next-auth": "^4.20.1",
