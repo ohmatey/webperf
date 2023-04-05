@@ -8,6 +8,7 @@ if (firebaseAdmin.apps.length) {
   app = firebaseAdmin.app()
 } else {
   app = firebaseAdmin.initializeApp()
+  
   firestore = getFirestore(app)
   firestore.settings({ ignoreUndefinedProperties: true })
 }

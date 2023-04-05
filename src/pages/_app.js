@@ -1,5 +1,6 @@
-import * as React from 'react'
+import { useEffect } from 'react'
 import Head from 'next/head'
+import { useRouter } from 'next/router'
 import { SessionProvider } from 'next-auth/react'
 import { Space_Mono } from 'next/font/google'
 import { ThemeProvider } from '@mui/material/styles'
@@ -11,6 +12,7 @@ import Box from '@mui/material/Box'
 import theme from '../config/theme'
 import createEmotionCache from '../utils/createEmotionCache'
 import { AuthProvider } from '../modules/auth/useAuth'
+import analytics from '../services/analytics'
 
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache()
@@ -21,6 +23,8 @@ const font = Space_Mono({
 })
 
 export default function MyApp(props) {
+  const router = useRouter()
+  
   const {
     Component,
     emotionCache = clientSideEmotionCache,
@@ -29,6 +33,20 @@ export default function MyApp(props) {
       ...pageProps
     },
   } = props
+
+  useEffect(() => {
+    const handleRouteChange = url => {
+      analytics.page({
+        url,
+      })
+    }
+
+    router.events.on('routeChangeComplete', handleRouteChange);
+    
+    return () => {
+      router.events.off('routeChangeComplete', handleRouteChange);
+    }
+  }, [])
 
   return (
     <CacheProvider value={emotionCache}>
