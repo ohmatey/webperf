@@ -46,7 +46,7 @@ export default function MyApp(props) {
     return () => {
       router.events.off('routeChangeComplete', handleRouteChange);
     }
-  }, [])
+  }, [router.events])
 
   return (
     <CacheProvider value={emotionCache}>
