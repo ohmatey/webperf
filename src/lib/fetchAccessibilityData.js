@@ -1,11 +1,14 @@
 import { AxePuppeteer } from 'axe-puppeteer'
-import puppeteer from 'puppeteer'
+
+import {
+  launchPuppeteer,
+} from '../services/puppeteer'
 
 async function fetchAccessibilityData(url) {
   let browser
 
   try {
-    browser = await puppeteer.launch({ headless: true })
+    browser = await launchPuppeteer({ headless: true })
     
     const page = await browser.newPage()
     

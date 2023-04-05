@@ -1,5 +1,8 @@
 import lighthouse from 'lighthouse'
-import puppeteer from 'puppeteer'
+
+import {
+  launchPuppeteer
+} from '../services/puppeteer'
 
 const usefulMetrics = [
   {
@@ -45,7 +48,7 @@ async function fetchCoreWebVitals(url, lighthouseOptions) {
   let browser
 
   try {
-    browser = await puppeteer.launch({ headless: true })
+    browser = await launchPuppeteer({ headless: true })
     
     // run lighthouse
     const { lhr } = await lighthouse(url, {
