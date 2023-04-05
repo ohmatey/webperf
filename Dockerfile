@@ -67,7 +67,7 @@ RUN npm install
 EXPOSE 8080
 
 # Build the app
-RUN npm build
+RUN npm run build
 
 # Run the specified command within the container.
 CMD [ "npm", "start" ]
