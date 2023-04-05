@@ -72,15 +72,17 @@ export default async function handler(req, res) {
 
       createdScheduledAnalysisId = scheduledAnalysis.id
 
-      const [
-        metadata,
-        axeAccessibilityReport,
-        coreWebVitalMetrics
-      ] = await Promise.all([
+      const analysisResults = await Promise.allSettled([
         fetchMetadata(url),
         fetchAccessibilityData(url),
         fetchCoreWebVitals(url, lighthouseOptions),
       ])
+
+      const [
+        metadata,
+        axeAccessibilityReport,
+        coreWebVitalMetrics
+      ] = analysisResults.map(result => result.value)
 
       const analysisData = {
         url,

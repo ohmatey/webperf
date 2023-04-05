@@ -24,7 +24,7 @@ async function fetchAccessibilityData(url) {
       await browser.close()
     }
 
-    throw error
+    return null
   }
 }
 

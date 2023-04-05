@@ -58,16 +58,16 @@ ENV PUPPETEER_CACHE_DIR /tmp/puppeteer-cache
 ENV NEXT_TELEMETRY_DISABLED=1
 
 # Install pnpm
-RUN npm install -g pnpm
+# RUN npm install -g pnpm
 
 # Install dependencies
-RUN pnpm install
+RUN npm install
 
 # Inform Docker that the container is listening on the specified port at runtime.
 EXPOSE 8080
 
 # Build the app
-RUN pnpm build
+RUN npm build
 
 # Run the specified command within the container.
-CMD [ "pnpm", "start" ]
+CMD [ "npm", "start" ]
