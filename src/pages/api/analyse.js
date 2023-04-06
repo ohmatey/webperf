@@ -82,7 +82,15 @@ export default async function handler(req, res) {
         metadata,
         axeAccessibilityReport,
         coreWebVitalMetrics
-      ] = analysisResults.map(result => result.value)
+      ] = analysisResults.map(result => {
+        if (result.status === 'fulfilled') {
+          return result.value
+        }
+
+        return {
+          error: result.reason.message
+        }
+      })
 
       const analysisData = {
         url,
